@@ -47,6 +47,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - id: toLowerCase
+        run: INPUT=${{ env.REPO }} echo "::set-output name=lowerCaseValue::${INPUT,,}"
+
       - name: Log in to GHCR
         uses: docker/login-action@v4
         with:
@@ -59,5 +62,5 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${REPO,,}:latest
-            ghcr.io/${REPO,,}:${{ github.sha }}
+            ghcr.io/${{steps.toLowerCase.outputs.lowerCaseValue}}:latest
+            ghcr.io/${{steps.toLowerCase.outputs.lowerCaseValue}}:${{ github.sha }}
