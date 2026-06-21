@@ -53,8 +53,8 @@ jobs:
 
       - name: Lower case repo
         env:
-          lower_case_repo: $(echo '${{ github.repository }}' | tr '[:upper:] '[:lower:]')
-        run: repo=${echo ${lower_case_repo}
+          lower_case_repo: $(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')
+        run: repo=$(echo ${lower_case_repo})
     
       - name: Build and push
         uses: docker/build-push-action@v7
