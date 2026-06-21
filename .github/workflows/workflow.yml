@@ -51,15 +51,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: lowercase
-        env:
-          all_lower_case: $(echo ${{ github.repository }} |  tr '[:upper:]' '[:lower:]')
-        run: lower_case_repo=${{env.all_lower_case}}
+      - name: Format repo slug
+        uses: actions/github-script@v4
+        id: repo_slug
+        with:
+          result-encoding: string
+          script: return `ghcr.io/${github.repository.toLowerCase()}`
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           push: true
           tags: |
-            ghcr.io/${lower_case_repo}:latest
-            ghcr.io/${lower_case_repo}:${{ github.sha }}
+            ghcr.io/${{ steps.repo_slug.outputs.result }}:latest
+            ghcr.io/${{ steps.repo_slug.outputs.result }}:${{ github.sha }}
