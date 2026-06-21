@@ -1,9 +1,6 @@
 # .github/workflows/ci.yml
 name: Workflow
 
-env:
-  REPO: ${{ github.repository }}
-
 on:
   push:
     branches: ["**"]
@@ -47,9 +44,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - id: toLowerCase
-        run: INPUT=${{ env.REPO }} echo "::set-output name=lowerCaseValue::${INPUT,,}"
-
       - name: Log in to GHCR
         uses: docker/login-action@v4
         with:
@@ -58,9 +52,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        env:
+          lower_case_repo: $(echo ${{ github.repository }} | tr '[:upper:] '[:lower:]')
         uses: docker/build-push-action@v7
         with:
           push: true
           tags: |
-            ghcr.io/${{steps.toLowerCase.outputs.lowerCaseValue}}:latest
-            ghcr.io/${{steps.toLowerCase.outputs.lowerCaseValue}}:${{ github.sha }}
+            ghcr.io/${{ env.lower_case_repo }}:latest
+            ghcr.io/${{ env.lower_case_repo }}:${{ github.sha }}
