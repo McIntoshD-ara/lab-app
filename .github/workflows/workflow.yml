@@ -51,17 +51,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Format repo slug
-        uses: actions/github-script@v4
-        id: repo_slug
-        with:
-          result-encoding: string
-          script: return `ghcr.io/${github.repository.toLowerCase()}`
+      - name: downcase REPO
+        run: |
+          echo "REPO=${github.repository,,}" >>${github.env}
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           push: true
           tags: |
-            ghcr.io/${{ steps.repo_slug.outputs.result }}:latest
-            ghcr.io/${{ steps.repo_slug.outputs.result }}:${{ github.sha }}
+            ghcr.io/${{ env.REPO }}:latest
+            ghcr.io/${{ env.REPO }}:${{ github.sha }}
