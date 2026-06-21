@@ -58,6 +58,13 @@ jobs:
         run: |
           kubectl apply -f ~/lab-app/k8s/
 
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - id: string
         uses: ASzc/change-string-case-action@v8
         with:
