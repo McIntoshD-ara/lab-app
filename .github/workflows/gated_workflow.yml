@@ -42,6 +42,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
+          context: ~/lab-app/
           push: true
           tags: |
             ghcr.io/${{ steps.string.outputs.lowercase }}:latest
@@ -67,5 +68,5 @@ jobs:
         run: |
           kubectl set image deployment/lab-app \
             lab-app=ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }} \
-            -n prod
-          kubectl rollout status deployment/lab-app -n prod --timeout=60s
+            -n dev
+          kubectl rollout status deployment/lab-app -n dev --timeout=60s
