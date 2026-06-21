@@ -1,5 +1,5 @@
 # .github/workflows/ci.yml
-name: CI
+name: Workflow
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run unit tests
-        run: pytest ./tests/test_app.py -v
+        run: PYTHONPATH=. pytest tests/ -v
 
       - name: Build Docker image
         run: docker build -t lab-app:${{ github.sha }} .
