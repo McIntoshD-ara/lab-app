@@ -52,13 +52,15 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: lowercase github.repository
-        run: |
-          echo "REPO=`echo ${{github.repository}} | tr '[:upper:]' '[:lower:]'`" >>${GITHUB_ENV}
+      - id: string
+        uses: ASzc/change-string-case-action@v7
+        with:
+          string: ${{ github.repository }}
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           push: true
           tags: |
-            ghcr.io/${REPO}:latest
-            ghcr.io/${REPO}:${{ github.sha }}
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }}
