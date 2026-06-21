@@ -49,9 +49,9 @@ jobs:
 
       - name: Apply manifests
         run: |
-          kubectl apply -f ~/k8s/dev/namespace.yaml
-          kubectl apply -f ~/k8s/dev/deployment.yaml
-          kubectl apply -f ~/k8s/dev/service.yaml
+          kubectl apply -f ~/lab-app/k8s/dev/namespace.yaml
+          kubectl apply -f ~/lab-app/k8s/dev/deployment.yaml
+          kubectl apply -f ~/lab-app/k8s/dev/service.yaml
 
       - name: Update image to latest commit
         run: |
@@ -68,9 +68,9 @@ jobs:
 
       - name: Apply manifests
         run: |
-          kubectl apply -f ~/k8s/prod/namespace.yaml
-          kubectl apply -f ~/k8s/prod/deployment.yaml
-          kubectl apply -f ~/k8s/prod/service.yaml
+          kubectl apply -f ~/lab-app/k8s/prod/namespace.yaml
+          kubectl apply -f ~/lab-app/k8s/prod/deployment.yaml
+          kubectl apply -f ~/lab-app/k8s/prod/service.yaml
 
       - id: string
         uses: ASzc/change-string-case-action@v8
