@@ -19,10 +19,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          source ~/.venv/bin/activate
           pip install -r requirements.txt
 
       - name: Run unit tests
         run: |
+          source ~/.venv/bin/activate
           pytest test_app.py -v
 
       - name: Log in to GHCR
