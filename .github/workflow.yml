@@ -1,0 +1,65 @@
+# .github/workflows/ci.yml
+name: Workflow
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: PYTHONPATH=. pytest tests/ -v
+
+      - name: Build Docker image
+        run: docker build -t lab-app:${{ github.sha }} .
+
+      - name: Save image as artefact
+        run: docker save lab-app:${{ github.sha }} | gzip > image.tar.gz
+
+      - name: Upload artefact
+        uses: actions/upload-artifact@v7
+        with:
+          name: docker-image-${{ github.sha }}
+          path: ./image.tar.gz
+
+  build-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: string
+        uses: ASzc/change-string-case-action@v8
+        with:
+          string: ${{ github.repository }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }}
