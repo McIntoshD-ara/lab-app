@@ -11,7 +11,7 @@ def test_index(client):
     res = client.get("/")
     assert res.status_code == 200
     assert b"ok" in res.data
-    assert b"hello world!" in res.data
+    assert b"Hello World!" in res.data
 
 def test_health(client):
     res = client.get("/health")
