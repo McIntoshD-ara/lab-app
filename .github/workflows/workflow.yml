@@ -52,12 +52,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lower case repo
-        run: echo "lower_case_repo=$(echo '${{ github.repository }}' | tr '[:upper:] '[:lower:]') >> $GITHUB_ENV"
+        env:
+          lower_case_repo: $(echo '${{ github.repository }}' | tr '[:upper:] '[:lower:]')
+        run: repo=${echo ${lower_case_repo}
     
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           push: true
           tags: |
-            ghcr.io/${{ env.lower_case_repo }}:latest
-            ghcr.io/${{ env.lower_case_repo }}:${{ github.sha }}
+            ghcr.io/${repo}:latest
+            ghcr.io/${repo}:${{ github.sha }}
