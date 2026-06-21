@@ -1,5 +1,0 @@
-# lab-app/k8s/dev/namespace.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prod
