@@ -36,7 +36,7 @@ jobs:
 
       - name: Apply manifests
         run: |
-          kubectl apply -f ~/lab-app/k8s/prod/
+          kubectl apply -f ~/lab-app/k8s/
 
       - id: string
         uses: ASzc/change-string-case-action@v8
