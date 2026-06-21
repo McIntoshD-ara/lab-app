@@ -42,7 +42,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          context: ~/lab-app/
           push: true
           tags: |
             ghcr.io/${{ steps.string.outputs.lowercase }}:latest
