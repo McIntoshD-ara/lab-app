@@ -27,38 +27,6 @@ jobs:
           source ~/.venv/bin/activate
           PYTHONPATH=. pytest tests -v
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - id: string
-        uses: ASzc/change-string-case-action@v8
-        with:
-          string: ${{ github.repository }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          push: true
-          tags: |
-            ghcr.io/${{ steps.string.outputs.lowercase }}:latest
-            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }}
-
-      - name: Apply manifests
-        run: |
-          kubectl apply -f ~/lab-app/k8s/dev/namespace.yaml
-          kubectl apply -f ~/lab-app/k8s/dev/deployment.yaml
-          kubectl apply -f ~/lab-app/k8s/dev/service.yaml
-
-      - name: Update image to latest commit
-        run: |
-          kubectl set image deployment/lab-app \
-            lab-app=ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }} \
-            -n dev
-          kubectl rollout status deployment/lab-app -n dev --timeout=60s
   deploy-prod:
     runs-on: self-hosted
     needs: test-and-build
@@ -68,9 +36,7 @@ jobs:
 
       - name: Apply manifests
         run: |
-          kubectl apply -f ~/lab-app/k8s/prod/namespace.yaml
-          kubectl apply -f ~/lab-app/k8s/prod/deployment.yaml
-          kubectl apply -f ~/lab-app/k8s/prod/service.yaml
+          kubectl apply -f ~/lab-app/k8s/prod/
 
       - id: string
         uses: ASzc/change-string-case-action@v8
