@@ -27,6 +27,19 @@ jobs:
           source ~/.venv/bin/activate
           PYTHONPATH=. pytest tests -v
 
+      - id: string
+        uses: ASzc/change-string-case-action@v8
+        with:
+          string: ${{ github.repository }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ steps.string.outputs.lowercase }}:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.sha }}
+
   deploy-prod:
     runs-on: self-hosted
     needs: test-and-build
