@@ -54,10 +54,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Apply manifests
-        run: |
-          kubectl apply -f ~/lab-app/k8s/
-
       - name: Log in to GHCR
         uses: docker/login-action@v4
         with:
@@ -69,7 +65,11 @@ jobs:
         uses: ASzc/change-string-case-action@v8
         with:
           string: ${{ github.repository }}
-            
+
+      - name: Apply manifests
+        run: |
+          kubectl apply -f ~/lab-app/k8s/
+
       - name: Deploy to prod
         run: |
           kubectl set image deployment/lab-app \
