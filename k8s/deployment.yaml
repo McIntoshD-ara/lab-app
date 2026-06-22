@@ -1,4 +1,4 @@
-# lab-app/k8s/dev/deployment.yaml
+# lab-app/k8s/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +14,8 @@ spec:
       labels:
         app: lab-app
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: lab-app
           image: ghcr.io/mcintoshd-ara/lab-app:latest
