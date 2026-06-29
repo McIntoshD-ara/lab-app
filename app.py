@@ -6,7 +6,7 @@ metrics = PrometheusMetrics(app) #automatically exposes /metrics endpoint
 
 @app.route("/")
 def index():
-    return jsonify({"status": "NOTok", "message": "Goodbye World!"})
+    return jsonify({"status": "ok", "message": "Hello World!"})
 
 @app.route("/health")
 def health():
